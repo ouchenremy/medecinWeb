@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="accueilMap.css">
+    <title>El Famoso Sito</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""></script>
+    <script src="jquery-3.6.3.min.js"></script>
+</head>
+<body>
+    
+  <div id="map"></div>
+  <button id="butMesRdv"><a href="http://172.19.0.18/ProjoMedecin/rendezVous/interactRDV.html">Mes rendez-vous</a></button>
+    
+    <script>
+
+        
+        var map = L.map('map').setView([48.8245306, 2.2743419], 15);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 20, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+        $.ajax({
+            method: "GET",
+            url: "https://data.issy.com/api/records/1.0/search/?dataset=medecins-generalistes-et-infirmiers&q=&rows=10000"
+        })
+        .done(function(data, textStatus, jqXHR) {
+            console.log(data);
+            for(var i = 0; i < data.length; i++){
+                var record = data.records[i];
+                var fields = record.fields;
+                if(fields.specialite == "MEDECIN GENERALISTE"){
+                    var marker = L.marker([fields.geolocalisation[0], fields.geolocalisation[1]]).addTo(map); //ville de Illy mouli truc muche
+                    var civilite = "";
+                    if(fields.civilite == "MADAME"){
+                        civilite = "Mme. ";
+                    }else{
+                        civilite = "M. ";
+                    }
+                    marker.bindPopup(fields.adresse + ".<br>" + civilite + fields.nom + " " + fields.prenom + "<br><br> <a href=\"../rendezVous/reserverRDV.html?medecin=" + record.recordid + "\">Reserver son RDV</a>");    
+                }
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            alert("Erreur survenue !");
+            console.log(jqXHR); // Objet jqXHR (infos de la requête AJAX)
+            console.log(textStatus); // Statut de la requête AJAX
+            console.log(errorThrown); // = statusText (type de l’erreur)
+        }); 
+
+    </script>
+    
+    <!-- ppeler json requete ajax en javascript 
+//AJax = pour la partie récuperation donnée 
+//JQuery = pour la partie affichage 
+// api des medecins, il faut que je recupere les coords https://www.data.gouv.fr/fr/datasets/r/36b57da9-57dd-4b9e-8dde-490985b7edb5 --> 
+</body>
+</html>
+
+
+    

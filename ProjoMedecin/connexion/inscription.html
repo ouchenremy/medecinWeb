@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="jquery-3.6.3.min.js"></script>
+</head>
+<body>
+    <form>
+        <table>
+            <tr>
+                <td><label>Nom : </label></td>
+                <td><input type="text" placeholder="Tom" id="nomPatientId" name="nomPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Prénom : </label></td>
+                <td><input type="text" placeholder="Jerry" id="prenomPatientId" name="prenomPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Adresse : </label></td>
+                <td><input type="text" placeholder="18 Rue des pirates" id="ruePatientId" name="ruePatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Code Postal : </label></td>
+                <td><input type="text" placeholder="21498" id="cpPatientId" name="cpPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Ville : </label></td>
+                <td><input type="text" placeholder="Fuchsia" id="villePatientId" name="villePatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Téléphone : </label></td>
+                <td><input type="text" placeholder="0327104695" id="telPatientId" name="telPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Identifiant (e-mail): </label></td>
+                <td><input type="text" placeholder="tom@jerry.com" id="loginPatientId" name="loginPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Mot de passe : </label></td>
+                <td><input type="password" placeholder="*********" id="mdpPatientId" name="mdpPatientName" class="decoration"></input></td>
+            </tr>
+            <tr>
+                <td><label>Répétez le mot de passe : </label></td>
+                <td><input type="password" placeholder="*********" id="mdpPatientIdVerif" name="mdpPatientNameVerif" class="decoration"></input></td>
+            </tr>    
+            <tr >
+                <td></td>
+                <td><button type="button" id="butInscri" class="btn btn-primary">S'inscrire</button></td>
+            </tr>
+            
+        </table>
+        
+    </form>
+
+    <script>
+        $(document).on("click", "#butInscri", function() {
+          if($('#mdpPatientId').val() == $('#mdpPatientIdVerif').val()){
+            $.ajax({
+              method: "POST",
+              url: "http://172.19.0.31/index.php?action=patient",
+              data: JSON.stringify({nom: $('#nomPatientId').val(), prenom: $('#prenomPatientId').val(), rue: $('#ruePatientId').val(), cp: $('#cpPatientId').val(), ville: $('#villePatientId').val(), tel: $('#telPatientId').val(), login: $('#loginPatientId').val(), mdp: $('#mdpPatientId').val()})
+            })
+            .done(function(data) {
+                var leToken = data.token;
+                document.cookie="token="+leToken+";path=/";
+                document.location.href="http://172.19.0.18/ProjoMedecin/accueil/accueilMap.html"; 
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                alert("Oups, Vous existez probablement déjà !");
+            });
+          }else{
+            alert("Les mots de passe sont différents.");
+          }
+        });
+
+    </script>
+</body>
+</html>
+
+

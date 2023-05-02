@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La conneccion</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: '#da373d',
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+</head>
+<body>
+
+  <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-md space-y-8">
+      <div>
+        <img class="mx-auto rounded-full h-12 w-auto" src="../images/logoConnect.jpg" alt="Your Company">
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Connectez-vous à votre compte</h2>
+      </div>
+      <form class="mt-8 space-y-6">
+        <input type="hidden" name="remember" value="true">
+        <div class="-space-y-px rounded-md shadow-sm">
+          <div>
+            <label for="email-address" class="sr-only">Identifiant</label>
+            <input id="login" name="email" type="text" autocomplete="email" class="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Identifiant">
+          </div> 
+          <div>
+            <label for="password" class="sr-only">Mot de passe</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" class="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Mot de passe">
+          </div>
+        </div>
+  
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900">Se souvenir de moi</label>
+          </div>
+  
+          <div class="text-sm">
+            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Mot de passe oublié ?</a>
+          </div>
+        </div>
+  
+        <div>
+          <button id="butConnect"  type="button" class="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+
+            </span>
+            Se connecter
+          </button><br>
+
+          <a href="./inscription.html"><button id="butInscri"  type="button" class="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              
+            </span>
+            Créer un compte
+          </button></a>
+
+          <script>
+            $(document).on("click", "#butConnect", function() {
+              $.ajax({
+                  method: "POST",
+                  url: "http://172.19.0.31/index.php?action=connexion",
+                  data: JSON.stringify({login: $('#login').val(), mdp: $('#password').val()})
+              })
+              .done(function(data) {
+                  var leToken = data.token;
+                  document.cookie="token="+leToken+";path=/";
+                  document.location.href="http://172.19.0.18/ProjoMedecin/accueil/accueilMap.html"; 
+              })
+              .fail(function(jqXHR, textStatus, errorThrown) {
+                  alert("Oups, l'identifiant ou le mot de passe est incorrect !");
+              });
+            });
+
+          </script>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</body>
+</html>

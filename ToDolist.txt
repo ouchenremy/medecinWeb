@@ -1,0 +1,30 @@
+- créer la page pour prendre rendez vous  Voir ce qu'il y a à mettre dedans qui soit intéressant et utile 
+(super comme to do list connard va)
+
+- prendre rendez vous, avoir les coords du client, ou faire un lien au moins avec sa connexion (je sais pas comment mdr)
+- afficher tous les rendez vous déjà pris et donc tous les rendez vous dispo (surtout) 
+- ensuite pouvoir prendre un rdv donc une requete pour insérer un rdv
+- y'a un monde où on peut faire en sorte qu'ils aient un logo en haut de l'écran ou quoi pour dire qu'ils ont déjà un rdv et en 
+cliquant dessus ils peuvent modifier leur rdv du coup parce que c'est plutot pratique quand même 
+- reflechir à si on gere le truc du remember me meme si en vrai j'ai pas envie
+- pareil pour les mdp oubliés 
+- faire la page de connexion aussi LOL 
+
+
+- faire une page à part parce que c'est chiant sinon mdr 
+
+tailwind pour les popup (c'est bien mais pas ouf en même temps)
+
+class div afficher et masquer à faire entrer via java avec onclick tmtc
+patient = nom, pnom, rue, cp, ville, tel
+
+rdv = date, id Patient, idMadecin (celui de l'url)
+
+
+
+token: diff verif 
+- est il passé en requete
+- s'il est dans la BDD
+- token = ip ? 
+
+Cju4#hfhfhfutt

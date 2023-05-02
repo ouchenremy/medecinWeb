@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+    <title>Rendez-vous</title>
+</head>
+<body>
+
+
+<div class="container">
+    <p>Bienvenue sur le deuxieme site futuriste, celui qui permet de *prendre un rendez-vous chez le medecin*</p>
+    <label>Choisir mon rendez-vous</label><br>
+    <small>Les horaires d'ouvertures sont : 8h00 - 17h00.</small><br>
+    <br>
+    <div class="row">
+      <div class='col-sm-6'>
+        <div class="form-group">
+          <div class='input-group date' id='datetimepicker1'>
+            <input type='text' class="form-control" id="dateJour" name="dateJour"/>
+            
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+
+          </div>        
+        </div>
+      </div>
+    </div>
+    
+    <button type="button" name="butReserver" id="butReserver">Réserver</button>
+  </div>
+
+  <script>
+  $(function() {
+    $('#datetimepicker1').datetimepicker({
+        format: "YYYY/MM/DD HH:mm",
+        minDate: get_today_date(new Date()),
+        stepping: "20"
+    });
+  });
+  function get_today_date(date) {
+     var day = date.getDate();
+     var month = date.getMonth() + 1;
+     var year = date.getFullYear().toString().slice(2);
+     return day + '-' + year + '-' + month;
+  }
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+  }
+  function getCookie(cName) {
+    cName = "token";
+    const name = cName + "=";
+    const cDecoded = decodeURIComponent(document.cookie); //to be careful
+    const cArr = cDecoded.split('; ');
+    let res;
+    cArr.forEach(val => {
+      if (val.indexOf(name) === 0) res = val.substring(name.length);
+    })
+    return res
+  }
+  
+  $(document).on("click", "#butReserver", function() {
+    
+              $.ajax({
+                  method: "POST",
+                  url: "http://172.19.0.31/index.php?action=rdv",
+                  data: JSON.stringify({date: $('#dateJour').val(), token: getCookie(), idMedecin: findGetParameter("medecin")})
+              })
+              .done(function(data) {
+                  
+                  document.location.href="http://172.19.0.18/ProjoMedecin/accueil/accueilMap.html"; 
+              })
+              .fail(function(jqXHR, textStatus, errorThrown) {
+
+                  alert("Oups, c cassé !" + console.debug($('#dateJour').val()));
+              });
+            });
+  </script>
+    <br>
+
+</body>
+</html>
