@@ -1,0 +1,75 @@
+On peut faire comme doctolib en fait !! 
+en vrai l'idée de faire un petit carré qui reprend les infos du pop up 
+et les affiches dans la page du rdv c'est cool je  trouve. 
+
+
+la requete c'est genre : json de tous les rendez vous déjà fait par ce docteur (avec son id logiquement)
+
+
+dooonc, je dois afficher ceux qui ne sont pas pris 
+la table c'est ça 
+INSERT INTO `rdv` (`idRdv`, `dateHeureRdv`, `idPatient`, `idMedecin`)
+    (11, '7777-03-12 15:41:00', 24, 'gggggggggggggg),
+    (16, '1020-03-12 15:49:00', 26, 'gggggggggggggg', NULL, NULL),
+    (17, '2023-04-14 15:15:00', 24, '35f1ae494124096d175c4178b58b5f1d3684167d'),
+    (18, '2023-04-13 15:15:00', 24, '35f1ae494124096d175c4178b58b5f1d3684167d');
+
+
+
+mettre un id sur les tableau pour pouvoir les remplir ensuite avec le js avec les bons jours 
+sur les boutons surtout, ce sera le même en fonction des heures de rdv, mais en fait après c'est la date qui change t'as vu, donc ça serait quand même plus simple
+
+
+
+TRIGGER 
+    - peut-être trigger pour éviter une prise de rdv qui existe déjà 
+    - peut-être mettre le code Heure en trigger aussi pour qu'il se fasse automatiquement mais 
+ça risque d'être chiant et compliqué
+    - 
+
+
+
+
+    en fait, pour vérifier des dates, on vérifie 
+    si annee < anneeActuelle //annee precedente donc cest mort
+        degage
+        
+    //a partir d'ici, l'année est forcément egale ou supérieur a anneeActuelle    
+    else if mois < moisActuel && annee == anneeActuelle //mois précedent et annee actuelle donc c'est mort
+        degage
+    else if jour < jourActuel && mois==moisActuel && annee==anneeActuelle //jour précedent et mois actuel dans annee actuelle 
+        degage 
+
+    normalement avec ça c'est bon je crois, à tester je pense, on peut sûrement faire une comparaison de date de toute façon 
+
+
+ca c'est juste pour pouvoir le replacer (apres fonction obtenirjour) au besoin parce que je vais le tej sans vergogne 
+
+
+$(function() {
+        $('#datetimepicker1').datetimepicker({
+            format: "YYYY/MM/DD HH:mm",
+            minDate: get_today_date(new Date()),
+            stepping: "20"
+        });
+      });
+      function get_today_date(date) {
+         var day = date.getDate();
+         var month = date.getMonth() + 1;
+         var year = date.getFullYear().toString().slice(2);
+         return day + '-' + year + '-' + month;
+      }
+      */
+
+
+
+
+
+pour interact 
+est-ce que c'est mieux de faire un tableau qui se remplit bizarrement comme ça a l'air d'etre prévu 
+OU : est-ce que je fais en sorte de juste récupérer les infos, et ensuite je change la valeur de 
+genre des input, dans le but de faire des phrases 
+
+Il faut aussi faire un pop-up, si possible, pour confirmer la suppression d'un rdv. 
+et pour la modification à la limite, on peut renvoyer sur la page pour prendre un autre rdv, 
+éventuellement avec les infos déjà enregistrées 

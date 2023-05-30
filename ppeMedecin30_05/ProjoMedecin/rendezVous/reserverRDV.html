@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery-3.6.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+    <title>Rendez-vous</title>
+    <style>
+        table, th{
+            border : solid black 1px;
+        }
+        table, th, td, tr, button{
+            margin: 5px;
+        }
+        .enGras{
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <p>Bienvenue sur le deuxieme site futuriste, celui qui permet de *prendre un rendez-vous chez le medecin*</p>
+    <p class='enGras'>Choisir mon rendez-vous</p><br>
+    <small>Les horaires d'ouvertures sont : 8h00 - 12h20 puis 13h-30 - 17h50. Derniers rendez-vous à 12h00 et 17h30.</small><br>
+    <br>
+
+    <p class='enGras'>Sélectionnez l'heure du rendez-vous:</p>
+    
+    <script>
+
+    function get_today_date(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear().toString().slice(2);
+        if(month < 10){
+            month = "0" + month;
+        }
+        return year + '/' + month + '/' + day;
+    }
+
+    function obtenirJour(str){
+        const words = str.split(' ');
+        return words[0];
+    }
+
+    function ecritureDate(date){
+        let newDate = date.toLocaleString('fr-FR',{
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'});
+        return newDate;
+    }
+
+    /*function testValue(codeHeure) {
+        alert("Oups, c cassé ! " + console.debug(codeHeure));
+    }*/
+
+    let jour1;
+    let jour2;
+    let jour3;
+    let dateLocale1;
+    let dateLocale2;
+    let dateLocale3;
+    let leJour;
+    let vraiJour;
+
+    
+    jour1 = new Date();
+    dateLocale1 = ecritureDate(jour1);
+    
+    jour2 = new Date(jour1);
+    jour2.setDate(jour1.getDate() + 1);
+    dateLocale2 = ecritureDate(jour2);
+
+    jour3 = new Date(jour1);
+    jour3.setDate(jour1.getDate() + 2);
+    dateLocale3 = ecritureDate(jour3);
+
+    /*$( window ).on( "load", function() {
+        $.ajax({
+            method: "GET",
+            url: "http://172.19.0.5/index.php?action=rdv",  
+        })
+        .done(function(data) {
+            */ 
+           for (let i = 0; i < 3; i++) {
+                let hour = 8;
+                let vraiJour = "";
+                if(i == 0){
+                    leJour = dateLocale1;
+                    vraiJour = jour1;
+                }else if(i == 1){
+                    leJour = dateLocale2;
+                    vraiJour = jour2;
+                }else{
+                    leJour = dateLocale3;
+                    vraiJour = jour3;
+                }
+
+                if(obtenirJour(leJour) == "samedi"){
+                    vraiJour.setDate(vraiJour.getDate() + 2);
+                    leJour = ecritureDate(vraiJour);
+                }
+                if(obtenirJour(leJour) == "dimanche"){
+                    vraiJour.setDate(vraiJour.getDate() + 2);
+                    leJour = ecritureDate(vraiJour);
+                }
+
+                //code servant de value pour la cellule contenant le jour 
+                let idDiv = get_today_date(vraiJour) +"_"+ (i+1);
+                document.write("<div id='"+idDiv+"'>" 
+                    + "<table>" 
+                    + "<tr>"
+                    + "<th colspan='13'>"+leJour+"</th>"
+                    + "</tr>"
+                    + "<tr>"
+                );
+
+                //lecture des donnees obtenues dans le json
+                /*for(var i = 0; i < data.length; i++){
+                    var record = data.records[i];
+                    var fields = record.fields;
+                    if(fields.specialite == "MEDECIN GENERALISTE"){
+                        var marker = L.marker([fields.geolocalisation[0], fields.geolocalisation[1]]).addTo(map); //ville de Illy mouli truc muche
+                        var civilite = "";
+                        if(fields.civilite == "MADAME"){
+                            civilite = "Mme. ";
+                        }else{
+                            civilite = "M. ";
+                        }
+                        marker.bindPopup(fields.adresse + ".<br>" + civilite + fields.nom + " " + fields.prenom + "<br><br> <a href=\"../rendezVous/reserverRDV.html?medecin=" + record.recordid + "\">Reserver son RDV</a>");    
+                    }
+                }
+                */
+                for(let j = 0; j<4; j++){
+                    let heureVariee = hour + j;
+                    if(heureVariee < 10){
+                        heureVariee = "0" + heureVariee;
+                    }
+                    document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h00_"+(i+1)+"'>"+heureVariee+"h00</button></td>"
+                    + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h20_"+(i+1)+"'>"+heureVariee+"h20</button></td>"
+                    + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h40_"+(i+1)+"'>"+heureVariee+"h40</button></td>"
+                    ); //cXXXX correspond à l'heure du rendez-vous, sous forme de code à 4 chiffres. 
+                }
+                document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_1200_"+(i+1)+"'>"+(hour+4)+"h00</td>"
+                    + "</tr>"
+                    + "<tr>"
+                    + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_1330_"+(i+1)+"'>"+(hour+5)+"h30</td>"
+                    + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_1350_"+(i+1)+"'>"+(hour+5)+"h50</td>"
+                );
+                for(let j = 6; j<9; j++){
+                    let heureVariee = hour + j;
+                    document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h10_"+(i+1)+"'>"+heureVariee+"h10</td>"
+                        + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h30_"+(i+1)+"'>"+heureVariee+"h30</td>"
+                        + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h50_"+(i+1)+"'>"+heureVariee+"h50</td>"
+                    );
+                }
+                document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_17h10_"+(i+1)+"'>"+(hour+9)+"h10</td>"
+                    + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_17h30_"+(i+1)+"'>"+(hour+9)+"h30</td>"
+                    + "</tr>"
+                    + "</table>" 
+                    +"</div>"
+                    + "<br>"
+                );
+            }/*
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            alert("Oups, c cassé !");// + document.querySelector('input[name="butReservTAb"]:checked').value);//$("#rdvMinSelect").val()));
+        });
+        
+    });*/
+
+   
+    
+    
+    
+    
+    </script>
+<br>
+    <p class="enGras">Vous souhaitez un autre jour ?:</p><br>
+    <select name="rdvHeure" id="rdvJourSelect">
+        <option value="">--Jour--</option>
+        <script>
+        
+        for (let i = 0; i < 3; i++) {
+            vraiJour = new Date(jour3);
+            vraiJour.setDate(vraiJour.getDate() + i + 1);
+            leJour = ecritureDate(vraiJour);
+            if(obtenirJour(leJour) == "samedi"){
+                vraiJour.setDate(vraiJour.getDate() + 2);
+                leJour = ecritureDate(vraiJour);
+            }
+            if(obtenirJour(leJour) == "dimanche"){
+                vraiJour.setDate(vraiJour.getDate() + 2);
+                leJour = ecritureDate(vraiJour);
+            }
+            document.write("<option value='"+obtenirJour(leJour)+"'>"+leJour+"</option> ");
+        }
+        </script>
+    </select>
+    <select name="rdvHeure" id="rdvHeureSelect">
+        <option value="">--Heure--</option>
+        <option value="">--Matin--</option>
+        <option value="huit">08</option>
+        <option value="neuf">09</option>
+        <option value="dixHeure">10</option>
+        <option value="onze">11</option>
+        <option value="douze">12</option>
+        <option value="">--Après-midi--</option>
+        <option value="treize">13</option>
+        <option value="quatorze">14</option>
+        <option value="quinze">15</option>
+        <option value="seize">16</option>
+        <option value="dixSpet">17</option>
+    </select> : 
+    <select name="rdvMin" id="rdvMinSelect">
+        <option value="">--Minute--</option>
+        <option value="">--Matin--</option>
+        <option value="pile">00</option>
+        <option value="vingt">20</option>
+        <option value="quarante">40</option>
+        <option value="">--Après-midi--</option>
+        <option value="trente">30</option>
+        <option value="cinquante">50</option>
+        <option value="dixMin">10</option>
+    </select>
+
+    <br>
+    <br>
+    <button type="button" name="butReserver" id="butReserver">Réserver</button>
+  </div>
+
+<script>
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+  }
+  function getCookie(cName) {
+    cName = "token";
+    const name = cName + "=";
+    const cDecoded = decodeURIComponent(document.cookie); //to be careful
+    const cArr = cDecoded.split('; ');
+    let res;
+    cArr.forEach(val => {
+      if (val.indexOf(name) === 0) res = val.substring(name.length);
+    })
+    return res;
+  }
+  
+  
+    $(document).on("click", "#butReserver", function() {
+        let valueSelection = document.querySelector('input[name="butReservTAb"]:checked').value;
+        const words = valueSelection.split('_');
+        let heureRdv = words[1];
+        let leNumDiv = words[2];
+        
+        let test;
+        switch (leNumDiv) {
+        case '1':
+            vraiJour = jour1;
+            break;
+        case '2':
+            vraiJour = jour2;
+            break;
+        case '3':
+            vraiJour = jour3;
+            // Expected output: "Mangoes and papayas are $2.79 a pound."
+            break;
+        default:
+            test = "ceci est la valeur par defaut";
+        }
+
+        let laDateDuRDV = get_today_date(vraiJour);
+
+        
+        $.ajax({
+            method: "POST",
+            url: "http://172.19.0.5/index.php?action=rdv",
+            data: JSON.stringify({date: laDateDuRDV, heure: heureRdv, token: getCookie(), idMedecin: findGetParameter("medecin")})
+        })
+        .done(function(data) {
+            //je recupere les data, dont le code, et si le code est pris avec la date et bien PAF je mets genre en gris ou blanc ou jsp, j'enleve si je peux ? pas sur d'y arriver
+            //donc verif code + date $("#"+code).val()
+            document.location.href="http://172.19.0.4/ProjoMedecin/accueil/accueilMap.html"; 
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            alert("Oups, c cassé !" + document.querySelector('input[name="butReservTAb"]:checked').value);//$("#rdvMinSelect").val()));
+        });
+        
+        //alert("Oups, c cassé !" + valueSelection +" "+ findGetParameter("medecin")+" "+ getCookie()+" "+ laDateDuRDV + " " + heureRdv); //$("#rdvMinSelect").val()));
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="jquery-3.6.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+    <title>Mes rendez-vous</title>
+</head>
+<body>
+    <div id="divAffiTache">
+        <p>Rendez-vous planifiés :</p>
+        <table id="rdvList">
+
+            <tr>
+                <th>Rendez-vous</th>
+                <th>Supprimer</th>
+                <th>Modifier</th>
+            </tr>
+
+    </div>
+    <script>
+    function getCookie(cName) {
+        cName = "token";
+        const name = cName + "=";
+        const cDecoded = decodeURIComponent(document.cookie); //to be careful
+        const cArr = cDecoded.split('; ');
+        let res;
+        cArr.forEach(val => {
+            if (val.indexOf(name) === 0) res = val.substring(name.length);
+        })
+        return res
+    }
+    $(document).ready(function(){
+
+        $.ajax({
+        method: "GET",
+        url: "http://172.19.0.5/index.php?action=rdv&tok="+getCookie(), 
+        })
+        .done(function(data, textStatus, jqXHR) {
+            console.log(data);
+            console.log(data.length);
+            for(var i = 0; i < data.length; i++){
+            var record = data[i];
+            var fields = record.fields;        
+                $('#rdvList').append(
+                    + '<tr>' 
+                    +    '<td><input type="text id="modifDesc" value = "' +  fields.dateHeureRdv + '"></input></td>'  
+                    +    '<td><input type="text id="modifDesc" value = "' +  fields.dateHeureRdv + '"></input></td>'                       
+                    +    '<td><button class="deleteButt" data-id="' + fields.idMedecin + '" value="'+ fields.idRdv +'">Supprimer</button></td>'
+                    +    '<td><button class="modifButt" data-id="' + fields.idMedecin + '" value="'+ fields.idRdv +'">Modifier</button></td>'
+                    + '</tr>'
+                );
+            };
+        })
+            
+
+        $(document).on("click", ".deleteButt", function() {
+            $.ajax({
+            method: "DELETE",
+            url: "http://172.19.0.31/index.php?action=rdv", 
+            data: JSON.stringify({idTache : $(".deleteButt").val()})
+            })
+        })
+
+        $(document).on("click", ".modifButt", function() {
+            $.ajax({
+            method: "PUT",
+            url: "http://172.19.0.31/index.php?action=rdv", 
+            data: JSON.stringify({idTache : $(".modifButt").val(), descTache: $('#modifDesc').val(), cateTache: $('#modifCate').val(), prioTache: $('#modifPrio').val()})
+            })
+        })
+    })
+    </script>
+
+</body>
+</html>

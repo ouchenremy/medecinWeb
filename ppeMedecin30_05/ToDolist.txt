@@ -1,0 +1,53 @@
+- créer la page pour prendre rendez vous  Voir ce qu'il y a à mettre dedans qui soit intéressant et utile 
+(super comme to do list connard va)
+
+- prendre rendez vous, avoir les coords du client, ou faire un lien au moins avec sa connexion (je sais pas comment mdr)
+- afficher tous les rendez vous déjà pris et donc tous les rendez vous dispo (surtout) 
+- ensuite pouvoir prendre un rdv donc une requete pour insérer un rdv
+- y'a un monde où on peut faire en sorte qu'ils aient un logo en haut de l'écran ou quoi pour dire qu'ils ont déjà un rdv et en 
+cliquant dessus ils peuvent modifier leur rdv du coup parce que c'est plutot pratique quand même 
+- reflechir à si on gere le truc du remember me meme si en vrai j'ai pas envie
+- pareil pour les mdp oubliés 
+- faire la page de connexion aussi LOL 
+
+
+- faire une page à part parce que c'est chiant sinon mdr 
+
+tailwind pour les popup (c'est bien mais pas ouf en même temps)
+
+class div afficher et masquer à faire entrer via java avec onclick tmtc
+patient = nom, pnom, rue, cp, ville, tel
+
+rdv = date, id Patient, idMadecin (celui de l'url)
+
+
+
+token: diff verif 
+- est il passé en requete
+- s'il est dans la BDD
+- token = ip ? 
+
+Cju4#hfhfhfutt
+
+
+tableau avec un affichage de tous les trucs 
+    je dois gérer les rdv de midi et 17 trente
+    le but c'est d'afficher en grisé ceux qui sont déjà pris (peut-etre en js en intéragissant avec le css et en liaison avec le json)
+
+    matin 
+8h  8H20  8H40 
+9H  9H20  9H40 
+10H 10H20 10H40 
+11H 11H20 11H40
+   après midi 
+13H30 13H50 14h10 
+14H30 14H50 15H10
+15H30 15H50 16H10
+16H30 16H50 17H10 
+
+Puis input de selection, probablement une liste déroulante, enfin deux avec heure : minutes 
+
+OU (non)
+
+faire des cellules boutons dans le tableau et faire en sorte que les rdv déjà pris soient pas cliquable, en css pareil, 
+            je sais pas comment par contre. pcq meme en type button ...)
