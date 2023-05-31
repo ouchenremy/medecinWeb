@@ -24,6 +24,10 @@
         .enGras{
             font-weight: bold;
         }
+        #selectionCachee{
+            appearance: none;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +38,7 @@
     <br>
 
     <p class='enGras'>Sélectionnez l'heure du rendez-vous:</p>
-    
+    <input id="selectionCachee" type='radio' name='butReservTAb' class='butReservTab' value='sansValeur' checked>
     <script>
 
     function get_today_date(date) {
@@ -127,7 +131,7 @@
                 );
 
                 //lecture des donnees obtenues dans le json
-                /*for(var i = 0; i < data.length; i++){
+                /*for(var k = 0; k < data.length; k++){
                     var record = data.records[i];
                     var fields = record.fields;
                     if(fields.specialite == "MEDECIN GENERALISTE"){
@@ -147,10 +151,11 @@
                     if(heureVariee < 10){
                         heureVariee = "0" + heureVariee;
                     }
+                    //cXXXX correspond à l'heure du rendez-vous, sous forme de code à 4 chiffres. 
                     document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h00_"+(i+1)+"'>"+heureVariee+"h00</button></td>"
                     + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h20_"+(i+1)+"'>"+heureVariee+"h20</button></td>"
                     + "<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_"+heureVariee+"h40_"+(i+1)+"'>"+heureVariee+"h40</button></td>"
-                    ); //cXXXX correspond à l'heure du rendez-vous, sous forme de code à 4 chiffres. 
+                    ); 
                 }
                 document.write("<td class='btn btn-info rounded-pill px-3'><input type='radio' name='butReservTAb' class='butReservTab' value='c_1200_"+(i+1)+"'>"+(hour+4)+"h00</td>"
                     + "</tr>"
@@ -191,53 +196,82 @@
     <select name="rdvHeure" id="rdvJourSelect">
         <option value="">--Jour--</option>
         <script>
-        
+        let jour4;
+        let jour5;
+        let jour6;
+        let testLundi;
         for (let i = 0; i < 3; i++) {
             vraiJour = new Date(jour3);
             vraiJour.setDate(vraiJour.getDate() + i + 1);
             leJour = ecritureDate(vraiJour);
+
+            if((testLundi == 1)&&(i==2)){
+                vraiJour.setDate(vraiJour.getDate() + 2);
+                leJour = ecritureDate(vraiJour);
+            }
             if(obtenirJour(leJour) == "samedi"){
                 vraiJour.setDate(vraiJour.getDate() + 2);
                 leJour = ecritureDate(vraiJour);
+                if(obtenirJour(leJour)=="lundi"){
+                    testLundi = 1;
+                }
             }
             if(obtenirJour(leJour) == "dimanche"){
                 vraiJour.setDate(vraiJour.getDate() + 2);
                 leJour = ecritureDate(vraiJour);
             }
-            document.write("<option value='"+obtenirJour(leJour)+"'>"+leJour+"</option> ");
+
+            switch (i) {
+                case 0:
+                    jour4 = new Date(vraiJour);
+                    break;
+                case 1:
+                    jour5 = new Date(vraiJour);
+                    break;
+                case 2:
+                    jour6 = new Date(vraiJour);
+                    break;
+                default:
+                    test = "Réservation impossible.";
+            }
+            let valOption = get_today_date(vraiJour) +"_"+ (i+4);
+            document.write("<option value='c_"+valOption+"'>"+leJour+"</option> ");
         }
         </script>
     </select>
     <select name="rdvHeure" id="rdvHeureSelect">
         <option value="">--Heure--</option>
         <option value="">--Matin--</option>
-        <option value="huit">08</option>
-        <option value="neuf">09</option>
-        <option value="dixHeure">10</option>
-        <option value="onze">11</option>
-        <option value="douze">12</option>
+        <option value="c_08h">08</option>
+        <option value="c_09h">09</option>
+        <option value="c_10h">10</option>
+        <option value="c_11h">11</option>
+        <option value="c_12h">12</option>
         <option value="">--Après-midi--</option>
-        <option value="treize">13</option>
-        <option value="quatorze">14</option>
-        <option value="quinze">15</option>
-        <option value="seize">16</option>
-        <option value="dixSpet">17</option>
+        <option value="c_13h">13</option>
+        <option value="c_14h">14</option>
+        <option value="c_15h">15</option>
+        <option value="c_16h">16</option>
+        <option value="c_17h">17</option>
     </select> : 
     <select name="rdvMin" id="rdvMinSelect">
         <option value="">--Minute--</option>
         <option value="">--Matin--</option>
-        <option value="pile">00</option>
-        <option value="vingt">20</option>
-        <option value="quarante">40</option>
+        <option value="c_00">00</option>
+        <option value="c_20">20</option>
+        <option value="c_40">40</option>
         <option value="">--Après-midi--</option>
-        <option value="trente">30</option>
-        <option value="cinquante">50</option>
-        <option value="dixMin">10</option>
+        <option value="c_30">30</option>
+        <option value="c_50">50</option>
+        <option value="c_10">10</option>
     </select>
 
     <br>
     <br>
     <button type="button" name="butReserver" id="butReserver">Réserver</button>
+    <br>
+    <br>
+    <small>Si vous ne parvenez pas à saisir une date parmi la liste, vous avez probablement séléctionné une date dans le tableau, veuillez rafraîchir la page pour corriger ce problème (F5)</small>
   </div>
 
 <script>
@@ -265,33 +299,72 @@
     return res;
   }
   
-  
+
     $(document).on("click", "#butReserver", function() {
-        let valueSelection = document.querySelector('input[name="butReservTAb"]:checked').value;
-        const words = valueSelection.split('_');
-        let heureRdv = words[1];
-        let leNumDiv = words[2];
+        let valueSelectionTab = document.querySelector('input[name="butReservTAb"]:checked').value;
         
-        let test;
-        switch (leNumDiv) {
-        case '1':
-            vraiJour = jour1;
-            break;
-        case '2':
-            vraiJour = jour2;
-            break;
-        case '3':
-            vraiJour = jour3;
-            // Expected output: "Mangoes and papayas are $2.79 a pound."
-            break;
-        default:
-            test = "ceci est la valeur par defaut";
+        let valueSelectJour;
+        let laDateDuRDV; //date (jour) envoyée à l'API
+        let heureRdv; //heure envoyée à l'API
+        let leNumDiv;
+
+
+        if(valueSelectionTab != "sansValeur"){ //le rendez vous est choisi parmis le tableau
+            const words = valueSelectionTab.split("_");
+            heureRdv = words[1];
+            leNumDiv = words[2];
+            //console.log(jour1, jour2, jour3);
+            let test;
+            switch (leNumDiv) {
+                case '1':
+                    vraiJour = jour1;
+                    break;
+                case '2':
+                    vraiJour = jour2;
+                    break;
+                case '3':
+                    vraiJour = jour3;
+                    break;
+                default:
+                    test = "Réservation impossible.";
+            }
+            laDateDuRDV = get_today_date(vraiJour);
         }
+        else if(document.getElementById('rdvJourSelect').value != ""){ //le rendez vous est choisi parmis la liste après le tableau 
+            valueSelectJour = document.getElementById('rdvJourSelect').value; 
+            const words = valueSelectJour.split("_");
+            laDateDuRDV = words[1];
+            let leNumJour = words[2];
+            //console.log(jour1, jour2, jour3);
+            let test;
+            switch (leNumJour) {
+                case '4':
+                    vraiJour = jour4;
+                    break;
+                case '5':
+                    vraiJour = jour5;
+                    break;
+                case '6':
+                    vraiJour = jour6;
+                    break;
+                default:
+                    test = "Réservation impossible.";
+            }
 
-        let laDateDuRDV = get_today_date(vraiJour);
+            let valueSelectHeure = document.getElementById('rdvHeureSelect').value; 
+            const heure = valueSelectHeure.split("_");
+            let valueSelectMin = document.getElementById('rdvMinSelect').value; 
+            const minute = valueSelectMin.split("_");
 
+            heureRdv = heure[1] + minute[1];
+        }
+        else{
+            alert("Vous n'avez séléctionné aucun rendez-vous.");
+        }
         
-        $.ajax({
+
+
+       /*$.ajax({
             method: "POST",
             url: "http://172.19.0.5/index.php?action=rdv",
             data: JSON.stringify({date: laDateDuRDV, heure: heureRdv, token: getCookie(), idMedecin: findGetParameter("medecin")})
@@ -303,9 +376,9 @@
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
             alert("Oups, c cassé !" + document.querySelector('input[name="butReservTAb"]:checked').value);//$("#rdvMinSelect").val()));
-        });
+        });*/
         
-        //alert("Oups, c cassé !" + valueSelection +" "+ findGetParameter("medecin")+" "+ getCookie()+" "+ laDateDuRDV + " " + heureRdv); //$("#rdvMinSelect").val()));
+        alert("Une erreur est survenue !" + console.log(valueSelectJour +" "+ laDateDuRDV + " " + heureRdv));//findGetParameter("medecin")+" "+ getCookie()+" "+ laDateDuRDV + " " + heureRdv); //$("#rdvMinSelect").val()));
     });
 </script>
 
